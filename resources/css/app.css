@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+@source '../js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Kursor pointer pada seluruh elemen interaktif */
+button, a, select, label[for], summary, [role='button'], input[type='file'], input[type='checkbox'] {
+    cursor: pointer;
+}
+button:disabled { cursor: not-allowed; }

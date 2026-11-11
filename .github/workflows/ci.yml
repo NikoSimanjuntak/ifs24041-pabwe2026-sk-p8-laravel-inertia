@@ -1,0 +1,20 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, gd, zip, xml
+          coverage: pcov
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env && php artisan key:generate
+      - run: composer audit
+      - run: npm ci && npm run build
+      - run: php artisan view:clear
+      - run: php artisan test --coverage --min=100
