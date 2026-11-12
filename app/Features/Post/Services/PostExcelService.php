@@ -52,7 +52,8 @@ class PostExcelService
     public function import(UploadedFile $file, User $user): int
     {
         try {
-            $rows = IOFactory::load($file->getRealPath())->getActiveSheet()->toArray(null, false, false, false);
+           $rows = IOFactory::load($file->getRealPath(), 0, [IOFactory::READER_XLSX, IOFactory::READER_XLS])
+    ->getActiveSheet()->toArray(null, false, false, false);
         } catch (Throwable) {
             throw ValidationException::withMessages(['file' => 'Berkas Excel tidak dapat dibaca.']);
         }
