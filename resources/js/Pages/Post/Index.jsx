@@ -160,6 +160,14 @@ export default function Index({ posts, stats, filters, categories }) {
                         <button onClick={submit} disabled={form.processing} className="flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-60">{form.processing && <Spinner />} Simpan</button>
                     </>}>
                     <div className="space-y-4">
+                        {Object.keys(form.errors).length > 0 && (
+                            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                <p className="font-medium">Artikel belum bisa disimpan:</p>
+                                <ul className="list-disc pl-5">
+                                    {Object.values(form.errors).map((message, i) => <li key={i}>{message}</li>)}
+                                </ul>
+                            </div>
+                        )}
                         <div>
                             <label className="mb-1 block text-sm font-medium">Judul</label>
                             <input value={form.data.title} onChange={(e) => form.setData('title', e.target.value)} className={field} />
