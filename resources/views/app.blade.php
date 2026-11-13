@@ -3,22 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('code') — {{ config('app.name', 'BlogVerse Pro') }}</title>
-    <style>
-        body { margin: 0; font-family: system-ui, sans-serif; background: #f8fafc; color: #1e293b; }
-        main { max-width: 32rem; margin: 0 auto; padding: 6rem 1.5rem; text-align: center; }
-        .code { font-size: 0.875rem; font-weight: 600; color: #3730a3; }
-        h1 { font-size: 1.875rem; margin: 0.5rem 0 1rem; }
-        p { color: #334155; line-height: 1.6; }
-        a { display: inline-block; margin-top: 1.5rem; padding: 0.625rem 1.25rem; border-radius: 0.5rem; background: #4338ca; color: #ffffff; text-decoration: none; font-weight: 500; }
-    </style>
+    <title inertia>{{ config('app.name', 'BlogVerse Pro') }}</title>
+    @viteReactRefresh
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
+    @inertiaHead
 </head>
-<body>
-    <main>
-        <p class="code">Kode @yield('code')</p>
-        <h1>@yield('title')</h1>
-        <p>@yield('message')</p>
-        <a href="{{ url('/') }}">Kembali ke beranda</a>
-    </main>
+<body class="bg-slate-50 text-slate-800 antialiased">
+    @inertia
 </body>
 </html>
