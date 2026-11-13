@@ -4,10 +4,6 @@ import {
     BookOpen, FileText, LayoutDashboard, Loader2, LogIn, LogOut, ShieldCheck,
     User as UserIcon, UserPlus, Users, X, CheckCircle2, AlertCircle,
 } from 'lucide-react';
-import Editor from '@toast-ui/editor';
-import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 
 /* ---------- Komponen bersama ---------- */
 
@@ -60,11 +56,27 @@ export function Pagination({ links = [] }) {
     );
 }
 
+/* Editor & viewer Markdown dimuat dinamis supaya tidak membebani halaman lain. */
+
 export function MarkdownViewer({ content }) {
     const ref = useRef(null);
     useEffect(() => {
-        const viewer = new Viewer({ el: ref.current, initialValue: content || '' });
-        return () => viewer.destroy();
+        let viewer = null;
+        let cancelled = false;
+
+        Promise.all([
+            import('@toast-ui/editor/dist/toastui-editor-viewer'),
+            import('@toast-ui/editor/dist/toastui-editor-viewer.css'),
+        ]).then(([mod]) => {
+            if (cancelled || !ref.current) return;
+            const Viewer = mod.default;
+            viewer = new Viewer({ el: ref.current, initialValue: content || '' });
+        });
+
+        return () => {
+            cancelled = true;
+            if (viewer) viewer.destroy();
+        };
     }, [content]);
     return <div ref={ref} />;
 }
@@ -73,13 +85,28 @@ export function MarkdownEditor({ value, onChange }) {
     const ref = useRef(null);
     const cb = useRef(onChange);
     cb.current = onChange;
+
     useEffect(() => {
-        const editor = new Editor({
-            el: ref.current, height: '420px', initialEditType: 'markdown',
-            previewStyle: 'vertical', initialValue: value || '', usageStatistics: false,
+        let editor = null;
+        let cancelled = false;
+
+        Promise.all([
+            import('@toast-ui/editor'),
+            import('@toast-ui/editor/dist/toastui-editor.css'),
+        ]).then(([mod]) => {
+            if (cancelled || !ref.current) return;
+            const Editor = mod.default;
+            editor = new Editor({
+                el: ref.current, height: '420px', initialEditType: 'markdown',
+                previewStyle: 'vertical', initialValue: value || '', usageStatistics: false,
+            });
+            editor.on('change', () => cb.current(editor.getMarkdown()));
         });
-        editor.on('change', () => cb.current(editor.getMarkdown()));
-        return () => editor.destroy();
+
+        return () => {
+            cancelled = true;
+            if (editor) editor.destroy();
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return <div ref={ref} />;
