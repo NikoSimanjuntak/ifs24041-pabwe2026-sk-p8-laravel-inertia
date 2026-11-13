@@ -64,8 +64,14 @@ export default function Index({ posts, stats, filters, categories }) {
 
     const submit = () => {
         const opts = { forceFormData: true, preserveScroll: true, onSuccess: () => setModal(null) };
-        if (editing) form.transform((d) => ({ ...d, _method: 'put' })).post(`/dashboard/posts/${editing.id}`, opts);
-        else form.transform((d) => d).post('/dashboard/posts', opts);
+
+        if (editing) {
+            form.transform((d) => ({ ...d, _method: 'put' }));
+            form.post(`/dashboard/posts/${editing.id}`, opts);
+        } else {
+            form.transform((d) => d);
+            form.post('/dashboard/posts', opts);
+        }
     };
 
     const confirmDelete = () => {
