@@ -32,9 +32,8 @@ return [
 
     // OpenAI Configuration
     'openai' => [
-        'endpoint' => env('OPENAI_ENDPOINT', 'https://api.openai.com/v1'),
-        'key' => env('OPENAI_KEY'),
-        'model' => env('OPENAI_MODEL', 'gpt-4.1-mini'),
-    ],
-
+    'endpoint' => env('OPENAI_ENDPOINT', 'https://delcom.org/api/v1'),
+    'key' => env('OPENAI_KEY'),
+    'model' => env('OPENAI_MODEL', 'qwen3.8-flash'),
+],
 ];
